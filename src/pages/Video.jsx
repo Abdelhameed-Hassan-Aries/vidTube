@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import ThumbDownOffAltOutlinedIcon from "@mui/icons-material/ThumbDownOffAltOutlined";
 import ReplyOutlinedIcon from "@mui/icons-material/ReplyOutlined";
 import AddTaskOutlinedIcon from "@mui/icons-material/AddTaskOutlined";
 import Comments from "../components/Comments";
 import Card from "../components/Card";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { STATIC_DATA } from "../data/data";
 
 const Container = styled.div`
   display: flex;
@@ -108,6 +108,9 @@ const Subscribe = styled.button`
 const Video = ({ setUserSignedIn }) => {
   const navigate = useNavigate();
 
+  const location = useLocation();
+  const video = location.state;
+
   useEffect(() => {
     const username = JSON.parse(localStorage.getItem("username"));
     const password = JSON.parse(localStorage.getItem("password"));
@@ -125,21 +128,20 @@ const Video = ({ setUserSignedIn }) => {
         <VideoWrapper>
           <iframe
             width="100%"
-            height="720"
-            src="https://www.youtube.com/embed/k3Vfj-e1Ma4"
+            height="720px"
+            src={video.videoLink}
             title="YouTube video player"
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen
           ></iframe>
         </VideoWrapper>
-        <Title>Test Video</Title>
+        <Title>{video.title}</Title>
         <Details>
-          <Info>7,948,154 views • Jun 22, 2022</Info>
+          <Info>
+            {video.views} views • {video.date}
+          </Info>
           <Buttons>
-            <Button>
-              <ThumbUpOutlinedIcon /> 123
-            </Button>
             <Button>
               <ThumbDownOffAltOutlinedIcon /> Dislike
             </Button>
@@ -154,10 +156,10 @@ const Video = ({ setUserSignedIn }) => {
         <Hr />
         <Channel>
           <ChannelInfo>
-            <Image src="https://yt3.ggpht.com/yti/APfAmoE-Q0ZLJ4vk3vqmV4Kwp0sbrjxLyB8Q4ZgNsiRH=s88-c-k-c0x00ffffff-no-rj-mo" />
+            <Image src={video.channelPic} />
             <ChannelDetail>
-              <ChannelName>Lama Dev</ChannelName>
-              <ChannelCounter>200K subscribers</ChannelCounter>
+              <ChannelName>{video.author}</ChannelName>
+              <ChannelCounter>{video.subs}</ChannelCounter>
               <Description>
                 Lorem ipsum dolor, sit amet consectetur adipisicing elit.
                 Doloribus laborum delectus unde quaerat dolore culpa sit aliquam
@@ -171,20 +173,13 @@ const Video = ({ setUserSignedIn }) => {
         <Hr />
         <Comments />
       </Content>
+
       <Recommendation>
-        <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" />
+        {STATIC_DATA.filter((item) => {
+          return item.author === video.author && item.title !== video.title;
+        }).map((item, idx) => {
+          return <Card type="sm" key={idx} item={item} />;
+        })}
       </Recommendation>
     </Container>
   );

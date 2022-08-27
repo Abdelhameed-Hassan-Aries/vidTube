@@ -3,6 +3,7 @@ import styled from "styled-components";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { Typography, Avatar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { STATIC_DATA } from "../data/data";
 
 const Container = styled.div`
   position: sticky;
@@ -72,23 +73,50 @@ const SignoutMenu = styled.button`
   background-color: ${({ theme }) => theme.bgLighter};
 `;
 
-const Navbar = ({ darkMode }) => {
+const Navbar = ({ darkMode, setStaticVideosData }) => {
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
   const [showSignOutMenu, setShowSignOutMenu] = useState(false);
+  const [searchKeyWord, setSearchKeyWord] = useState("");
 
   useEffect(() => {
     const username = JSON.parse(localStorage.getItem("username"));
     setUsername(username);
   }, []);
 
+  const handleSearch = () => {
+    const searchArr = STATIC_DATA.filter((item) => {
+      return item.searchKeywords?.some((keyWord) => {
+        if (
+          keyWord
+            .toLocaleLowerCase()
+            .includes(searchKeyWord.toLocaleLowerCase())
+        ) {
+          return true;
+        }
+        return false;
+      });
+    });
+
+    setStaticVideosData(searchArr);
+    navigate("/home");
+  };
+
   return (
     <Container>
       <Wrapper>
         <Search>
-          <Input placeholder="Search" style={{ width: "100%" }} />
-          <SearchOutlinedIcon sx={{ color: darkMode ? "white" : "black" }} />
+          <Input
+            placeholder="Search"
+            style={{ width: "100%" }}
+            value={searchKeyWord}
+            onChange={(e) => setSearchKeyWord(e.target.value)}
+          />
+          <SearchOutlinedIcon
+            onClick={handleSearch}
+            sx={{ color: darkMode ? "white" : "black" }}
+          />
         </Search>
 
         <UserData onClick={() => setShowSignOutMenu(!showSignOutMenu)}>

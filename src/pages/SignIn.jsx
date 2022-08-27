@@ -8,7 +8,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: calc(100vh - 56px);
+  height: 100vh;
   color: ${({ theme }) => theme.text};
 `;
 

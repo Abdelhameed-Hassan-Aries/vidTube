@@ -8,6 +8,7 @@ import SignIn from "./pages/SignIn";
 import styled, { ThemeProvider } from "styled-components";
 import { darkTheme, lightTheme } from "./utils/Theme";
 import { ToastProvider } from "./hooks/useToast";
+import { STATIC_DATA } from "./data/data";
 
 const Container = styled.div`
   display: flex;
@@ -25,6 +26,7 @@ const Wrapper = styled.div`
 function App() {
   const [darkMode, setDarkMode] = useState(true);
   const [userSignedIn, setUserSignedIn] = useState(false);
+  const [staticVideosData, setStaticVideosData] = useState(STATIC_DATA);
 
   return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
@@ -35,7 +37,12 @@ function App() {
               <Menu darkMode={darkMode} setDarkMode={setDarkMode} />
             )}
             <Main>
-              {userSignedIn && <Navbar darkMode={darkMode} />}
+              {userSignedIn && (
+                <Navbar
+                  darkMode={darkMode}
+                  setStaticVideosData={setStaticVideosData}
+                />
+              )}
               <Wrapper>
                 <Routes>
                   <Route path="/">
@@ -45,7 +52,13 @@ function App() {
                     />
                     <Route
                       path="home"
-                      element={<Home setUserSignedIn={setUserSignedIn} />}
+                      element={
+                        <Home
+                          darkMode={darkMode}
+                          staticVideosData={staticVideosData}
+                          setUserSignedIn={setUserSignedIn}
+                        />
+                      }
                     />
                     <Route path="video">
                       <Route
