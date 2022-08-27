@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useToastContext, TOAST_MESSAGES } from "../hooks/useToast.jsx";
 
 const Container = styled.div`
   display: flex;
@@ -73,6 +74,7 @@ const Form = styled.form`
 
 const SignIn = ({ setUserSignedIn }) => {
   const navigate = useNavigate();
+  const { handleToast } = useToastContext();
 
   const [signUpEmail, setSignUpEmail] = useState("");
   const [signUpUserName, setSignUpUserName] = useState("");
@@ -86,15 +88,29 @@ const SignIn = ({ setUserSignedIn }) => {
 
   const handleSignUp = (e) => {
     e.preventDefault();
-    if (signUpEmail && signUpUserName && signUpPassword) {
-      localStorage.setItem("email", JSON.stringify(signUpEmail));
-      localStorage.setItem("username", JSON.stringify(signUpUserName));
-      localStorage.setItem("password", JSON.stringify(signUpPassword));
-      setUserSignedIn(true);
-      resetValues();
 
-      navigate("/home");
+    if (!signUpEmail) {
+      handleToast(TOAST_MESSAGES.emailEmpty, "error");
+      return;
     }
+
+    if (!signUpUserName) {
+      handleToast(TOAST_MESSAGES.usernameEmpty, "error");
+      return;
+    }
+
+    if (!signUpPassword) {
+      handleToast(TOAST_MESSAGES.passwordEmpty, "error");
+      return;
+    }
+
+    localStorage.setItem("email", JSON.stringify(signUpEmail));
+    localStorage.setItem("username", JSON.stringify(signUpUserName));
+    localStorage.setItem("password", JSON.stringify(signUpPassword));
+    setUserSignedIn(true);
+    resetValues();
+
+    navigate("/home");
   };
 
   const handleSignIn = (e) => {
@@ -102,11 +118,19 @@ const SignIn = ({ setUserSignedIn }) => {
     const username = JSON.parse(localStorage.getItem("username"));
     const password = JSON.parse(localStorage.getItem("password"));
 
-    if (signInUserName === username && signInPassword === password) {
-      setUserSignedIn(true);
-      resetValues();
-      navigate("/home");
+    if (signInUserName !== username) {
+      handleToast(TOAST_MESSAGES.usernameDoesNotExist, "error");
+      return;
     }
+
+    if (signInPassword !== password) {
+      handleToast(TOAST_MESSAGES.passwordIncorrect, "error");
+      return;
+    }
+
+    setUserSignedIn(true);
+    resetValues();
+    navigate("/home");
   };
 
   const resetValues = () => {

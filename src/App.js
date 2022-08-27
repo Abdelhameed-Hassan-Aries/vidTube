@@ -7,6 +7,7 @@ import Video from "./pages/Video";
 import SignIn from "./pages/SignIn";
 import styled, { ThemeProvider } from "styled-components";
 import { darkTheme, lightTheme } from "./utils/Theme";
+import { ToastProvider } from "./hooks/useToast";
 
 const Container = styled.div`
   display: flex;
@@ -27,36 +28,38 @@ function App() {
 
   return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
-      <Container>
-        <BrowserRouter>
-          {userSignedIn && (
-            <Menu darkMode={darkMode} setDarkMode={setDarkMode} />
-          )}
-          <Main>
-            {userSignedIn && <Navbar darkMode={darkMode} />}
-            <Wrapper>
-              <Routes>
-                <Route path="/">
-                  <Route
-                    index
-                    element={<SignIn setUserSignedIn={setUserSignedIn} />}
-                  />
-                  <Route
-                    path="home"
-                    element={<Home setUserSignedIn={setUserSignedIn} />}
-                  />
-                  <Route path="video">
+      <ToastProvider>
+        <Container>
+          <BrowserRouter>
+            {userSignedIn && (
+              <Menu darkMode={darkMode} setDarkMode={setDarkMode} />
+            )}
+            <Main>
+              {userSignedIn && <Navbar darkMode={darkMode} />}
+              <Wrapper>
+                <Routes>
+                  <Route path="/">
                     <Route
-                      path=":id"
-                      element={<Video setUserSignedIn={setUserSignedIn} />}
+                      index
+                      element={<SignIn setUserSignedIn={setUserSignedIn} />}
                     />
+                    <Route
+                      path="home"
+                      element={<Home setUserSignedIn={setUserSignedIn} />}
+                    />
+                    <Route path="video">
+                      <Route
+                        path=":id"
+                        element={<Video setUserSignedIn={setUserSignedIn} />}
+                      />
+                    </Route>
                   </Route>
-                </Route>
-              </Routes>
-            </Wrapper>
-          </Main>
-        </BrowserRouter>
-      </Container>
+                </Routes>
+              </Wrapper>
+            </Main>
+          </BrowserRouter>
+        </Container>
+      </ToastProvider>
     </ThemeProvider>
   );
 }

@@ -46,6 +46,7 @@ const UserData = styled.button`
   padding: 5px 15px;
   background-color: transparent;
   border: 1px solid ${({ theme }) => theme.text};
+  width: 178px;
   color: white;
   border-radius: 3px;
   font-weight: 500;
@@ -86,8 +87,8 @@ const Navbar = ({ darkMode }) => {
     <Container>
       <Wrapper>
         <Search>
-          <Input placeholder="Search" />
-          <SearchOutlinedIcon />
+          <Input placeholder="Search" style={{ width: "100%" }} />
+          <SearchOutlinedIcon sx={{ color: darkMode ? "white" : "black" }} />
         </Search>
 
         <UserData onClick={() => setShowSignOutMenu(!showSignOutMenu)}>
@@ -96,6 +97,7 @@ const Navbar = ({ darkMode }) => {
             variant="body2"
             style={{ color: darkMode ? "white" : "black" }}
             marginX={1}
+            noWrap
           >
             {username}
           </Typography>
