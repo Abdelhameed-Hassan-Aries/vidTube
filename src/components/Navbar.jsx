@@ -115,7 +115,7 @@ const Navbar = ({ darkMode, setStaticVideosData }) => {
           />
           <SearchOutlinedIcon
             onClick={handleSearch}
-            sx={{ color: darkMode ? "white" : "black" }}
+            sx={{ color: darkMode ? "white" : "black", cursor: "pointer" }}
           />
         </Search>
 

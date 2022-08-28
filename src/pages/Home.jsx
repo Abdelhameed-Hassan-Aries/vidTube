@@ -6,8 +6,8 @@ import { Typography } from "@mui/material";
 
 const Container = styled.div`
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
+  gap: 10px;
 `;
 
 const Home = ({ darkMode, staticVideosData, setUserSignedIn }) => {
@@ -24,10 +24,27 @@ const Home = ({ darkMode, staticVideosData, setUserSignedIn }) => {
     }
   }, []);
 
+  const shuffle = (array) => {
+    let currentIndex = array.length,
+      randomIndex;
+
+    while (currentIndex !== 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex],
+        array[currentIndex],
+      ];
+    }
+
+    return array;
+  };
+
   return (
     <Container>
       {staticVideosData.length ? (
-        staticVideosData.map((item, idx) => {
+        shuffle(staticVideosData).map((item, idx) => {
           return <Card key={idx} item={item} />;
         })
       ) : (
